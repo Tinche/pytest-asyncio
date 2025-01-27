@@ -80,3 +80,35 @@ def test_event_loop_fixture_handles_unclosed_async_gen(
     )
     result = pytester.runpytest_subprocess("--asyncio-mode=strict", "-W", "default")
     result.assert_outcomes(passed=1, warnings=0)
+
+
+def test_event_loop_already_closed(
+    pytester: Pytester,
+):
+    pytester.makeini("[pytest]\nasyncio_default_fixture_loop_scope = function")
+    pytester.makepyfile(
+        dedent(
+            """\
+            import asyncio
+            import pytest
+            import pytest_asyncio
+            pytest_plugins = 'pytest_asyncio'
+
+            @pytest_asyncio.fixture
+            async def _event_loop():
+                return asyncio.get_running_loop()
+
+            @pytest.fixture
+            def cleanup_after(_event_loop):
+                yield
+                # fixture has its own cleanup code
+                _event_loop.close()
+
+            @pytest.mark.asyncio
+            async def test_something(cleanup_after):
+                await asyncio.sleep(0.01)
+            """
+        )
+    )
+    result = pytester.runpytest_subprocess("--asyncio-mode=strict", "-W", "default")
+    result.assert_outcomes(passed=1, warnings=0)
