@@ -4,9 +4,10 @@ Changelog
 
 0.26.0 (UNRELEASED)
 ===================
-- Adds configuration option that sets default event loop scope for all testss `#793 <https://github.com/pytest-dev/pytest-asyncio/issues/793>`_
+- Adds configuration option that sets default event loop scope for all tests `#793 <https://github.com/pytest-dev/pytest-asyncio/issues/793>`_
 - Improved type annotations for ``pytest_asyncio.fixture`` `#1045 <https://github.com/pytest-dev/pytest-asyncio/pull/1045>`_
 - Added ``typing-extensions`` as additional dependency for Python ``<3.10`` `#1045 <https://github.com/pytest-dev/pytest-asyncio/pull/1045>`_
+- Avoid errors in cleanup when event loop is already closed `#1051 <https://github.com/pytest-dev/pytest-asyncio/issues/1051>`_
 
 
 0.25.2 (2025-01-08)
